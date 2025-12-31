@@ -27,7 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { PlusIcon, LogOutIcon, TrashIcon } from "lucide-react";
+import { PlusIcon, LogOutIcon, TrashIcon, SendIcon } from "lucide-react";
 import { normalizePhone, sanitizePhone, sanitizeText } from "@/lib/normalize";
 import { SendSMSDialog } from "../components/sms-dialog";
 
@@ -43,16 +43,12 @@ export default function DashboardPage() {
   const [isSending, setIsSending] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [message, setMessage] = useState("");
   const [isSmsDialogOpen, setIsSmsDialogOpen] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState<Set<string>>(
     new Set()
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const currentUser =
-    typeof window !== "undefined"
-      ? localStorage.getItem("currentUser") || ""
-      : "";
-  const router = useRouter();
 
   // Form state for adding new contact
   const [formData, setFormData] = useState({
@@ -180,12 +176,16 @@ export default function DashboardPage() {
       });
 
       if (!res.ok) throw new Error();
-      setIsDialogOpen(false);
+
       toast.success(`SMS sent to ${phoneNumbers.length} contact(s)`);
     } catch (error) {
       toast.error("Failed to send SMS");
     } finally {
       setIsSending(false);
+      setIsDialogOpen(false);
+      setIsSmsDialogOpen(false);
+      setMessage("");
+      window.location.reload();
     }
   };
 
@@ -199,7 +199,6 @@ export default function DashboardPage() {
               <h1 className="text-2xl font-bold text-gray-900">
                 Send Bulk SMS
               </h1>
-              <p className="text-sm text-muted-foreground">{currentUser}</p>
             </div>
             <Button variant="outline" onClick={handleLogout}>
               <LogOutIcon className="size-4" />
@@ -337,11 +336,22 @@ export default function DashboardPage() {
                     Deselect All
                   </Button>
                   <div className="flex-1" />
+
+                  <Button
+                    disabled={selectedContacts.size === 0}
+                    onClick={() => setIsSmsDialogOpen(!isSmsDialogOpen)}
+                  >
+                    <SendIcon className="size-4 mr-2" />
+                    Send SMS ({selectedContacts.size})
+                  </Button>
+
                   <SendSMSDialog
                     handleSendBulkSMS={handleSendBulkSMS}
                     selectedContacts={selectedContacts}
                     isSmsDialogOpen={isSmsDialogOpen}
                     setIsSmsDialogOpen={setIsSmsDialogOpen}
+                    message={message}
+                    setMessage={setMessage}
                     isSending={isSending}
                   />
                 </div>

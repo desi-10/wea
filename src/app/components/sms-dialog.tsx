@@ -43,14 +43,18 @@ export function SendSMSDialog({
   isSending,
   isSmsDialogOpen,
   setIsSmsDialogOpen,
+  message,
+  setMessage,
 }: {
   selectedContacts: Set<string>;
   handleSendBulkSMS: (message: string) => void;
   isSmsDialogOpen: boolean;
   setIsSmsDialogOpen: (state: boolean) => void;
+  setMessage: (message: string) => void;
+  message: string;
   isSending: boolean;
 }) {
-  const [message, setMessage] = useState("");
+  const [] = useState("");
 
   const sanitizedMessage = useMemo(() => sanitizeSMS(message), [message]);
 
@@ -65,13 +69,6 @@ export function SendSMSDialog({
 
   return (
     <Dialog open={isSmsDialogOpen} onOpenChange={setIsSmsDialogOpen}>
-      <DialogTrigger asChild>
-        <Button disabled={selectedContacts.size === 0}>
-          <SendIcon className="size-4 mr-2" />
-          Send SMS ({selectedContacts.size})
-        </Button>
-      </DialogTrigger>
-
       <DialogContent className="lg:max-w-xl">
         <DialogHeader>
           <DialogTitle>Send SMS</DialogTitle>
