@@ -76,13 +76,6 @@ export default function DashboardPage() {
     fetchContacts();
   }, []);
 
-  const saveContacts = (updatedContacts: Contact[]) => {
-    const user = localStorage.getItem("currentUser") || "";
-    const contactsKey = `contacts_${user}`;
-    localStorage.setItem(contactsKey, JSON.stringify(updatedContacts));
-    setContacts(updatedContacts);
-  };
-
   const handleAddContact = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -148,9 +141,12 @@ export default function DashboardPage() {
     setSelectedContacts(newSelection);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("currentUser");
-    router.push("/");
+  const handleLogout = async () => {
+    await fetch("/api/logout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
+    window.location.reload();
   };
 
   const handleSendBulkSMS = async (message: string) => {

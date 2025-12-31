@@ -1,14 +1,16 @@
 import { cookies } from "next/headers";
-import { hashPassword, HARDCODED_USER } from "@/lib/auth-utils";
+import { HARDCODED_USER, setHardcodedUserPassword } from "@/lib/auth-utils";
 
 export async function POST(req: Request) {
   const { email, password } = await req.json();
 
-  const hashed = await hashPassword(password);
+  await setHardcodedUserPassword(
+    process.env.USER_PASSWORD || "defaultpassword"
+  );
 
   if (
     email !== HARDCODED_USER.email ||
-    hashed !== HARDCODED_USER.passwordHash
+    password !== HARDCODED_USER.passwordHash
   ) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }

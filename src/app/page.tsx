@@ -3,10 +3,10 @@
 import type React from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { sanitizePassword } from "@/lib/auth-utils";
 import { sanitizeEmail } from "@/lib/normalize";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { sanitizePassword } from "@/lib/auth-utils";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
