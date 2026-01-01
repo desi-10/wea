@@ -18,7 +18,7 @@ import { SendIcon } from "lucide-react";
 /* =====================
    Config
 ===================== */
-const MAX_SMS_CHARS = 90;
+const MAX_SMS_CHARS = 160;
 
 /* =====================
    Utils
@@ -91,7 +91,7 @@ export function SendSMSDialog({
               isOverLimit ? "text-red-500" : "text-muted-foreground"
             }`}
           >
-            {charCount} / {MAX_SMS_CHARS} characters
+            {charCount} / {MAX_SMS_CHARS} characters.
           </div>
         </div>
 
